@@ -33,17 +33,21 @@ export default function users(state = initialState, action) {
                 baseCurrency: action.payload
             }
         case type.GET_EXCHANGE_RATES_REQUESTED:
+            console.log("GET_EXCHANGE_RATES_REQUESTED====>", action.payload);
             return {
                 ...state,
                 loading: true,
             }
         case type.GET_EXCHANGE_RATES_SUCCESS:
+            console.log("GET_EXCHANGE_RATES_SUCCESS payload====>", action.payload);
             return {
                 ...state,
                 loading: false,
-                exchangeRates: action.payload
+                exchangeRates: { ...action.payload }
             }
         case type.GET_EXCHANGE_RATES_FAILED:
+            console.log("GET_EXCHANGE_RATES_FAILED payload====>", action.message);
+
             return {
                 ...state,
                 loading: false,

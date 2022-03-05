@@ -26,7 +26,18 @@ const Table = styled.table`
   margin: 0;
   padding: 0;
   width: 100%;
+  max-height: 20rem;
   table-layout: fixed;
+
+  & tbody {
+    display: inline-block;
+    overflow: auto;
+    height: 20rem;
+    width: 100%;
+  }
+  & thead tr {
+    display: inline-block;
+  }
   & caption {
     font-size: 1.5em;
     margin: 0.5em 0 0.75em;
@@ -41,6 +52,7 @@ const Table = styled.table`
     padding: 0.625em;
     text-align: center;
     border: 1px solid #ddd;
+    width: 100%;
   }
   & th {
     font-size: 0.85em;
@@ -75,10 +87,7 @@ export default function ExchangeRate() {
   const { baseCurrency, loading, error, exchange, exchangeRates } = useSelector(
     (state) => state.currency
   );
-  console.log(
-    "🚀 ~ file: ExchangeRate.jsx ~ line 73 ~ ExchangeRate ~ baseCurrency",
-    baseCurrency
-  );
+  console.log("🚀 ~ exchangeRates===>", exchangeRates);
 
   // const data = {
   //   USD: 1,
@@ -95,7 +104,7 @@ export default function ExchangeRate() {
   ];
 
   useEffect(() => {
-    if (baseCurrency !== null || exchangeRates !== null) {
+    if (baseCurrency === null) {
       dispatch(getExchangeRates(baseCurrency));
     } else {
       dispatch(setBaseCurrency("USD"));
@@ -130,7 +139,7 @@ export default function ExchangeRate() {
             ? Object.keys(exchangeRates).map((dataKey, idx) => (
                 <tr key={idx}>
                   <td>{dataKey}</td>
-                  <td>{data[dataKey]}</td>
+                  <td>{exchangeRates[dataKey]}</td>
                 </tr>
               ))
             : null}

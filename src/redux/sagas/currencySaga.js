@@ -1,14 +1,14 @@
+import axios from 'axios';
 import { call, put, takeEvery } from 'redux-saga/effects';
 import * as type from '../types';
 
-const apiUrl = `https://v6.exchangerate-api.com/v6/7f84ec1772ade20e2adbceee/latest/`;
-function getApi(code) {
+
+const apiUrl = `https://v6.exchangerate-api.com/v6/7f84ec1772ade20e2adbceee/latest/USD`;
+async function getApi(code) {
     console.log("🚀 ~ file: currencySaga.js ~ line 6 ~ getApi ~ code", code)
 
-    return fetch(`${apiUrl}${code}`, {
-        method: 'GET',
+    return await axios.get(apiUrl, {
         mode: 'cors',
-        "Access-Control-Allow-Origin": '*',
         headers: {
             'Content-Type': 'application/json',
 
@@ -16,18 +16,19 @@ function getApi(code) {
     }).then(response => {
         console.log("🚀 ~ file: currencySaga.js ~ line 13 ~ getApi ~ response", response)
 
-        return response.json()
+        return response
     })
         .catch((error) => { throw error })
 }
 
 function* fetchExchangeRates(action) {
-    console.log("🚀 ~ file: currencySaga.js ~ line 21 ~ function*fetchExchangeRates ~ action", action)
     let currencyCode = action.payload
 
     try {
-        const { conversion_rates } = yield call(getApi(currencyCode));
-        yield put({ type: type.GET_EXCHANGE_RATES_SUCCESS, payload: conversion_rates });
+        const response = yield call(getApi, currencyCode);
+        console.log("🚀 ~ file: currencySaga.js ~ line 29 ~ function*fetchExchangeRates ~ data", response.data)
+
+        yield put({ type: type.GET_EXCHANGE_RATES_SUCCESS, payload: response.data.conversion_rates });
     } catch (e) {
         yield put({ type: type.GET_EXCHANGE_RATES_FAILED, message: e.message });
     }

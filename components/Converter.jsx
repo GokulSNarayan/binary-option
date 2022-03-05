@@ -98,11 +98,11 @@ export default function Converter() {
       <Form onSubmit={handleConvert}>
         <FormSection>
           <FormItem>
-            <Label for="currencyValue">Amount</Label>
+            <Label htmlFor="currencyValue">Amount</Label>
             <Input name="currencyValue" />
           </FormItem>
           <FormItem>
-            <Label for="baseCurrency">From</Label>
+            <Label htmlFor="baseCurrency">From</Label>
             <Select name="baseCurrency">
               {data.map((item, idx) => (
                 <option key={idx} value={item[0]}>
@@ -113,7 +113,7 @@ export default function Converter() {
           </FormItem>
 
           <FormItem>
-            <Label for="baseCurrency">To</Label>
+            <Label htmlFor="baseCurrency">To</Label>
             <Select name="baseCurrency">
               {data.map((item, idx) => (
                 <option key={idx} value={item[0]}>
