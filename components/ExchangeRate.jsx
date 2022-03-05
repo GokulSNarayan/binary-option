@@ -1,5 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  getBaseCurrency,
+  getExchangeRates,
+  setBaseCurrency,
+} from "../src/redux/actions/currency";
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -65,19 +71,40 @@ const Select = styled.select`
 
 export default function ExchangeRate() {
   const [baseCode, setBaseCode] = useState("AED");
-  const data = {
-    USD: 1,
-    AUD: 1.4817,
-    BGN: 1.7741,
-    CAD: 1.3168,
-    CHF: 0.9774,
-    CNY: 6.9454,
-  };
+  const dispatch = useDispatch();
+  const { baseCurrency, loading, error, exchange, exchangeRates } = useSelector(
+    (state) => state.currency
+  );
+  console.log(
+    "🚀 ~ file: ExchangeRate.jsx ~ line 73 ~ ExchangeRate ~ baseCurrency",
+    baseCurrency
+  );
+
+  // const data = {
+  //   USD: 1,
+  //   AUD: 1.4817,
+  //   BGN: 1.7741,
+  //   CAD: 1.3168,
+  //   CHF: 0.9774,
+  //   CNY: 6.9454,
+  // };
   const dataCodes = [
     ["AED", "UAE Dirham"],
     ["AFN", "Afghan Afghani"],
     ["ALL", "Albanian Lek"],
   ];
+
+  useEffect(() => {
+    if (baseCurrency !== null || exchangeRates !== null) {
+      dispatch(getExchangeRates(baseCurrency));
+    } else {
+      dispatch(setBaseCurrency("USD"));
+    }
+  }, [dispatch]);
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
   return (
     <Wrapper>
       <Title>Exchange Rate</Title>
@@ -99,12 +126,14 @@ export default function ExchangeRate() {
           </tr>
         </thead>
         <tbody>
-          {Object.keys(data).map((dataKey, idx) => (
-            <tr key={idx}>
-              <td>{dataKey}</td>
-              <td>{data[dataKey]}</td>
-            </tr>
-          ))}
+          {exchangeRates
+            ? Object.keys(exchangeRates).map((dataKey, idx) => (
+                <tr key={idx}>
+                  <td>{dataKey}</td>
+                  <td>{data[dataKey]}</td>
+                </tr>
+              ))
+            : null}
         </tbody>
       </Table>
     </Wrapper>
