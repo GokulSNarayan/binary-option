@@ -8,18 +8,22 @@ const Text = styled.h2`
   color: "#000";
 `;
 const Form = styled.form`
-  min-height: 50%;
+  min-height: 20rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: "#fff";
   width: 75%;
   margin: 0 auto;
+  background-color: "#cccccc99";
+  border-radius: 8px;
+  box-shadow: rgb(35 55 80 / 30%) 0px 6px 12px;
+  margin-bottom: 100px;
 `;
 const Label = styled.label`
   color: "#000";
   margin-right: 5px;
+  margin-bottom: 2px;
 `;
 const Select = styled.select`
   min-width: 200px;
@@ -51,15 +55,24 @@ const Input = styled.input`
   margin-right: 5px;
 `;
 
+const FormItem = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-right: 1rem;
+`;
 const FormSection = styled.section`
-  min-width: 75%;
-  margin-bottom: 20px;
+  display: flex;
+  margin: 0 auto;
+  width: 80%;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 2rem;
 `;
 
 const Button = styled.button`
   height: 35px;
   width: 100px;
-  margin-bottom: 20px;
   background-color: #65cca1;
   font-size: 14px;
   border: none;
@@ -84,31 +97,37 @@ export default function Converter() {
       <Title>Currency Converter</Title>
       <Form onSubmit={handleConvert}>
         <FormSection>
-          <Label for="baseCurrency">Base Currency</Label>
-          <Select name="baseCurrency">
-            {data.map((item, idx) => (
-              <option key={idx} value={item[0]}>
-                {item[1]}
-              </option>
-            ))}
-          </Select>
-          <Label for="currencyValue">Value</Label>
-          <Input name="currencyValue" />
+          <FormItem>
+            <Label for="currencyValue">Amount</Label>
+            <Input name="currencyValue" />
+          </FormItem>
+          <FormItem>
+            <Label for="baseCurrency">From</Label>
+            <Select name="baseCurrency">
+              {data.map((item, idx) => (
+                <option key={idx} value={item[0]}>
+                  {item[1]}
+                </option>
+              ))}
+            </Select>
+          </FormItem>
+
+          <FormItem>
+            <Label for="baseCurrency">To</Label>
+            <Select name="baseCurrency">
+              {data.map((item, idx) => (
+                <option key={idx} value={item[0]}>
+                  {item[1]}
+                </option>
+              ))}
+            </Select>
+          </FormItem>
+          <Button type="submit">Convert</Button>
         </FormSection>
         <FormSection>
-          <Label for="baseCurrency">Target Currency</Label>
-          <Select name="baseCurrency">
-            {data.map((item, idx) => (
-              <option key={idx} value={item[0]}>
-                {item[1]}
-              </option>
-            ))}
-          </Select>
+          <Text name="convertedValue">{`1 USD equals 45 INR`}</Text>
         </FormSection>
-        <Button type="submit">Convert</Button>
       </Form>
-      <Label for="convertedValue">Converted Value</Label>
-      <Text name="convertedValue">45</Text>
     </>
   );
 }

@@ -1,16 +1,112 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
+const Wrapper = styled.div`
+  margin: 0 auto;
+  width: 60%;
+`;
 const Title = styled.h1`
   color: "#000";
 `;
 
+const SubTitle = styled.h3`
+  color: "#000";
+`;
+const Table = styled.table`
+  /* border: 1px solid #fff; */
+  border-collapse: collapse;
+  border-radius: 8px;
+  box-shadow: rgb(35 55 80 / 30%) 0px 6px 12px;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  table-layout: fixed;
+  & caption {
+    font-size: 1.5em;
+    margin: 0.5em 0 0.75em;
+  }
+  & tr {
+    background-color: "#cccccc99";
+    border: 1px solid #111;
+    padding: 0.35em;
+  }
+  & th,
+  & td {
+    padding: 0.625em;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  & th {
+    font-size: 0.85em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+`;
+const Select = styled.select`
+  min-width: 200px;
+  height: 35px;
+  background: white;
+  color: gray;
+  padding-left: 5px;
+  font-size: 14px;
+  border: none;
+  margin-right: 10px;
+
+  option {
+    color: black;
+    background: white;
+    display: flex;
+    white-space: pre;
+    min-height: 20px;
+    padding: 0px 2px 1px;
+  }
+`;
 // const apiUrl = "https://v6.exchangerate-api.com/v6/7f84ec1772ade20e2adbceee/";
 
 export default function ExchangeRate() {
+  const [baseCode, setBaseCode] = useState("AED");
+  const data = {
+    USD: 1,
+    AUD: 1.4817,
+    BGN: 1.7741,
+    CAD: 1.3168,
+    CHF: 0.9774,
+    CNY: 6.9454,
+  };
+  const dataCodes = [
+    ["AED", "UAE Dirham"],
+    ["AFN", "Afghan Afghani"],
+    ["ALL", "Albanian Lek"],
+  ];
   return (
-    <>
+    <Wrapper>
       <Title>Exchange Rate</Title>
-    </>
+      <SubTitle>
+        Base Currency:{" "}
+        <Select value={baseCode} onChange={(e) => setBaseCode(e.target.value)}>
+          {dataCodes.map((code, idx) => (
+            <option key={idx} value={code[0]}>
+              {`${code[0]} - ${code[1]}`}
+            </option>
+          ))}
+        </Select>
+      </SubTitle>
+      <Table>
+        <thead>
+          <tr>
+            <th>Currency Code</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.keys(data).map((dataKey, idx) => (
+            <tr key={idx}>
+              <td>{dataKey}</td>
+              <td>{data[dataKey]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </Wrapper>
   );
 }
