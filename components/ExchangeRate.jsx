@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import React, { useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  getBaseCurrency,
   getExchangeRates,
   setBaseCurrency,
   getSupportedCodes,
@@ -14,19 +12,18 @@ export default function ExchangeRate() {
   const { baseCurrency, loading, error, exchangeRates, supportedCodes } =
     useSelector((state) => state.currency);
 
-  const dataCodes = [
-    ["AED", "UAE Dirham"],
-    ["AFN", "Afghan Afghani"],
-    ["ALL", "Albanian Lek"],
-  ];
+  const memoizedGetExchangeRate = useCallback(
+    () => getExchangeRates(baseCurrency),
+    [baseCurrency]
+  );
 
   useEffect(() => {
     if (baseCurrency !== null) {
-      dispatch(getExchangeRates(baseCurrency));
+      dispatch(memoizedGetExchangeRate(baseCurrency));
     } else {
       dispatch(setBaseCurrency("USD"));
     }
-  }, [dispatch]);
+  }, [dispatch, baseCurrency]);
 
   useEffect(() => {
     if (supportedCodes === null) {

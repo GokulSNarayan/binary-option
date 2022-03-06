@@ -98,34 +98,41 @@ export const Table = styled.table`
   max-height: 20rem;
   table-layout: fixed;
 
-  & tbody {
-    display: inline-block;
-    overflow: auto;
-    height: 20rem;
-    width: 100%;
-  }
-  & thead tr {
-    display: inline-block;
-  }
-  & caption {
-    font-size: 1.5em;
-    margin: 0.5em 0 0.75em;
-  }
-  & tr {
-    background-color: "#cccccc99";
-    border: 1px solid #111;
-    padding: 0.35em;
-  }
-  & th,
-  & td {
-    padding: 0.625em;
-    text-align: center;
-    border: 1px solid #ddd;
-    width: 100%;
-  }
-  & th {
-    font-size: 0.85em;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
+& tr {
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+}
+& tr th, table tr td {
+  display: table-cell;
+  padding: 0.5rem;
+  text-align: center;
+}
+& thead {
+  display: table;
+  width: calc(100% - 1rem);
+}
+& thead th {
+  border-bottom: solid 1px #dcdbd9;
+  color: #4e4e4eff;
+  font-weight: bold;
+  line-height: 1rem;
+  text-transform: uppercase;
+}
+& tbody {
+  display: block;
+  max-height: 15rem;
+  overflow: auto;
+}
+& tbody tr {
+  background-color: '#ffffffgg';
+}
+
+& tbody tr:not(:last-child) {
+  border-bottom: solid 1px #ddd;
+}
+& tbody tr td {
+  color: #4e4e4e;
+  line-height: 2rem;
+}
 `;

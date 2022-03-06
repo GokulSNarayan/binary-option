@@ -24,19 +24,14 @@ const apiUrl = "https://v6.exchangerate-api.com/v6/7f84ec1772ade20e2adbceee/";
 
 export default function Converter() {
   const dispatch = useDispatch();
-  const {
-    baseCurrency,
-    loading,
-    error,
-    exchangeRates,
-    supportedCodes,
-    conversionPairData,
-  } = useSelector((state) => state.currency);
+  const { loading, error, supportedCodes, conversionPairData } = useSelector(
+    (state) => state.currency
+  );
   const [baseCode, setBaseCode] = useState(conversionPairData?.base ?? "");
   const [targetCode, setTargetCode] = useState(
     conversionPairData?.target ?? ""
   );
-  const [amount, setAmount] = useState(1);
+  const [amount, setAmount] = useState(conversionPairData?.amount ?? 1);
 
   useEffect(() => {
     if (supportedCodes === null) {
@@ -57,6 +52,8 @@ export default function Converter() {
             <Label htmlFor="currencyValue">Amount</Label>
             <Input
               name="currencyValue"
+              type={"number"}
+              pattern="[0-9]*"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
@@ -100,6 +97,7 @@ export default function Converter() {
           <Button type="submit">Convert</Button>
         </FormSection>
         <FormSection>
+          {error !== null ? <h2>Error while fetching! Try again</h2> : null}
           {conversionPairData !== null ? (
             <Text name="convertedValue">{`${conversionPairData?.amount} ${
               conversionPairData?.base
