@@ -20,3 +20,9 @@
 ## API Ref:
 
 - [Exchange Rate API](https://www.exchangerate-api.com/)
+
+### Improvements to be done:
+
+- Unit tests
+- Styling improvements
+- Code Refactoring
