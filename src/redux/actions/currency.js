@@ -19,3 +19,15 @@ export function getExchangeRates(currencyCode) {
         payload: currencyCode,
     }
 }
+export function getSupportedCodes() {
+    return {
+        type: type.GET_SUPPORTED_CODES_REQUESTED
+    }
+}
+
+export function getConversionPair(base, target, amount) {
+    return {
+        type: type.GET_CONVERSION_VALUE_REQUESTED,
+        payload: { base, target, amount }
+    }
+}

@@ -1,96 +1,52 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 
-const Title = styled.h1`
-  color: "#000";
-`;
-const Text = styled.h2`
-  color: "#000";
-`;
-const Form = styled.form`
-  min-height: 20rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 75%;
-  margin: 0 auto;
-  background-color: "#cccccc99";
-  border-radius: 8px;
-  box-shadow: rgb(35 55 80 / 30%) 0px 6px 12px;
-  margin-bottom: 100px;
-`;
-const Label = styled.label`
-  color: "#000";
-  margin-right: 5px;
-  margin-bottom: 2px;
-`;
-const Select = styled.select`
-  min-width: 200px;
-  height: 35px;
-  background: white;
-  color: gray;
-  padding-left: 5px;
-  font-size: 14px;
-  border: none;
-  margin-right: 10px;
-
-  option {
-    color: black;
-    background: white;
-    display: flex;
-    white-space: pre;
-    min-height: 20px;
-    padding: 0px 2px 1px;
-  }
-`;
-
-const Input = styled.input`
-  height: 35px;
-  background: white;
-  color: gray;
-  padding-left: 5px;
-  font-size: 14px;
-  border: none;
-  margin-right: 5px;
-`;
-
-const FormItem = styled.section`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-right: 1rem;
-`;
-const FormSection = styled.section`
-  display: flex;
-  margin: 0 auto;
-  width: 80%;
-  align-items: flex-end;
-  justify-content: center;
-  margin-bottom: 2rem;
-`;
-
-const Button = styled.button`
-  height: 35px;
-  width: 100px;
-  background-color: #65cca1;
-  font-size: 14px;
-  border: none;
-  justify-self: center;
-`;
+import { useSelector, useDispatch } from "react-redux";
+import {
+  getBaseCurrency,
+  getExchangeRates,
+  setBaseCurrency,
+  getSupportedCodes,
+  getConversionPair,
+} from "../src/redux/actions/currency";
+import {
+  Form,
+  Title,
+  FormSection,
+  Button,
+  FormItem,
+  Input,
+  Label,
+  Select,
+  Text,
+} from "./CustomComponents";
 
 const apiUrl = "https://v6.exchangerate-api.com/v6/7f84ec1772ade20e2adbceee/";
 
 export default function Converter() {
-  const data = [
-    ["AED", "UAE Dirham"],
-    ["AFN", "Afghan Afghani"],
-    ["ALL", "Albanian Lek"],
-  ];
+  const dispatch = useDispatch();
+  const {
+    baseCurrency,
+    loading,
+    error,
+    exchangeRates,
+    supportedCodes,
+    conversionPairData,
+  } = useSelector((state) => state.currency);
+  const [baseCode, setBaseCode] = useState(conversionPairData?.base ?? "");
+  const [targetCode, setTargetCode] = useState(
+    conversionPairData?.target ?? ""
+  );
+  const [amount, setAmount] = useState(1);
+
+  useEffect(() => {
+    if (supportedCodes === null) {
+      dispatch(getSupportedCodes());
+    }
+  }, [dispatch]);
 
   const handleConvert = (event) => {
     event.preventDefault();
-    console.log("button clicked");
+    dispatch(getConversionPair(baseCode, targetCode, amount));
   };
   return (
     <>
@@ -99,33 +55,58 @@ export default function Converter() {
         <FormSection>
           <FormItem>
             <Label htmlFor="currencyValue">Amount</Label>
-            <Input name="currencyValue" />
+            <Input
+              name="currencyValue"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
           </FormItem>
           <FormItem>
             <Label htmlFor="baseCurrency">From</Label>
-            <Select name="baseCurrency">
-              {data.map((item, idx) => (
-                <option key={idx} value={item[0]}>
-                  {item[1]}
-                </option>
-              ))}
+            <Select
+              name="targetCurrency"
+              value={baseCode}
+              onChange={(e) => setBaseCode(e.target.value)}
+            >
+              <option value="">Select Base Currency</option>
+              {supportedCodes !== null
+                ? supportedCodes.map((item, idx) => (
+                    <option key={idx} value={item[0]}>
+                      {item[1]}
+                    </option>
+                  ))
+                : null}
             </Select>
           </FormItem>
 
           <FormItem>
-            <Label htmlFor="baseCurrency">To</Label>
-            <Select name="baseCurrency">
-              {data.map((item, idx) => (
-                <option key={idx} value={item[0]}>
-                  {item[1]}
-                </option>
-              ))}
+            <Label htmlFor="targetCurrency">To</Label>
+            <Select
+              name="targetCurrency"
+              value={targetCode}
+              onChange={(e) => setTargetCode(e.target.value)}
+            >
+              <option value="">Select Target Currency</option>
+
+              {supportedCodes !== null
+                ? supportedCodes.map((item, idx) => (
+                    <option key={idx} value={item[0]}>
+                      {item[1]}
+                    </option>
+                  ))
+                : null}
             </Select>
           </FormItem>
           <Button type="submit">Convert</Button>
         </FormSection>
         <FormSection>
-          <Text name="convertedValue">{`1 USD equals 45 INR`}</Text>
+          {conversionPairData !== null ? (
+            <Text name="convertedValue">{`${conversionPairData?.amount} ${
+              conversionPairData?.base
+            } equals ${conversionPairData?.convertedValue ?? 0} ${
+              conversionPairData?.target
+            }`}</Text>
+          ) : null}
         </FormSection>
       </Form>
     </>
