@@ -2,7 +2,7 @@
 
 ### Running Application in Development Mode
 
-> `yarn dev ` or `npm run dev`
+> `yarn dev` or `npm run dev`
 
 ### Production build
 
